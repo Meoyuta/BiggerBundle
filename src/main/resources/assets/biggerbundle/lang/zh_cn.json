@@ -1,0 +1,6 @@
+{
+  "item.biggerbundle.storage_bag": "储存袋",
+  "block.biggerbundle.wool_block": "羊毛块",
+  "tooltip.biggerbundle.storage_bag.open": "背包内右键或手持右键打开",
+  "tooltip.biggerbundle.storage_bag.already_open": "这个储存袋已被其他玩家打开"
+}
