@@ -45,6 +45,7 @@ public class BBRecipeProvider extends RecipeProvider implements IConditionBuilde
                 .requires(Ingredient.of(ItemTags.WOOL), 4)
                 .requires(Ingredient.of(Items.WHITE_DYE), 1)
                 .unlockedBy("has_wool", has(ItemTags.WOOL))
+                .unlockedBy("has_white_dye", has(Items.WHITE_DYE))
                 .save(output, "shapeless_crafting_wool_block");
         ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.MISC, Items.WHITE_WOOL, 4)
