@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public final class StorageBagSavedData extends SavedData {
@@ -61,11 +62,17 @@ public final class StorageBagSavedData extends SavedData {
         return data;
     }
 
-    public static StorageBagSavedData get(MinecraftServer server) {
+    public static @NotNull StorageBagSavedData get(MinecraftServer server) {
         return server.overworld().getDataStorage().computeIfAbsent(
                 new SavedData.Factory<>(StorageBagSavedData::create, StorageBagSavedData::load),
                 FILE_ID
         );
+    }
+
+    public Set<UUID> getUUIDSet() {
+        synchronized (lock) {
+            return bags.keySet();
+        }
     }
 
     @Override

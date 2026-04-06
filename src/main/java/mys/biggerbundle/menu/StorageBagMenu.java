@@ -1,6 +1,7 @@
 package mys.biggerbundle.menu;
 
 import mys.biggerbundle.item.StorageBagItem;
+import mys.biggerbundle.menu.slot.BagSlot;
 import mys.biggerbundle.menu.slot.LockedSlot;
 import mys.biggerbundle.registry.BBMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -28,14 +29,14 @@ public final class StorageBagMenu extends AbstractContainerMenu {
         this.bagContainer = bagContainer;
         this.bagContainer.startOpen(playerInventory.player);
 
-        // 袋子内部：6x9
+        // 袋子内部：3x9
         int bagStartX = 8;
         int bagStartY = 18;
 
         int slot = 0;
         for (int row = 0; row < StorageBagItem.ROWS; row++) {
             for (int col = 0; col < StorageBagItem.COLUMNS; col++) {
-                this.addSlot(new Slot(bagContainer, slot++, bagStartX + col * 18, bagStartY + row * 18));
+                this.addSlot(new BagSlot(bagContainer, slot++, bagStartX + col * 18, bagStartY + row * 18));
             }
         }
 
