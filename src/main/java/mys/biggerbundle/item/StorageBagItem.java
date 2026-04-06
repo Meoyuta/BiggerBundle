@@ -7,6 +7,7 @@ import mys.biggerbundle.registry.BBDataComponents;
 import mys.biggerbundle.storage.StorageBagContainer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -37,7 +38,7 @@ public class StorageBagItem extends Item {
     }
 
     private static void openBag(ServerPlayer player, ItemStack stack, int bagSlot) {
-        UUID bagId = getOrCreateBagId(stack);
+        UUID bagId = getOrCreateBagId(stack, player.getServer());
         StorageBagSavedData data = StorageBagSavedData.get(Objects.requireNonNull(player.getServer()));
 
         if (!data.tryLock(bagId, player.getUUID())) {
@@ -62,10 +63,14 @@ public class StorageBagItem extends Item {
         );
     }
 
-    public static UUID getOrCreateBagId(ItemStack stack) {
+    public static UUID getOrCreateBagId(ItemStack stack, MinecraftServer server) {
         BagIdComponent component = stack.get(BBDataComponents.BAG_ID.get());
         if (component == null) {
-            component = new BagIdComponent(UUID.randomUUID());
+            UUID uuid;
+            do {
+                uuid = UUID.randomUUID();
+            } while (StorageBagSavedData.get(server).getUUIDSet().contains(uuid));
+            component = new BagIdComponent(uuid);
             stack.set(BBDataComponents.BAG_ID.get(), component);
         }
         return component.id();

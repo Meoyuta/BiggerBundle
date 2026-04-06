@@ -29,22 +29,29 @@ public class BBCommands {
                                         .then(
                                                 Commands.argument("uuid", StringArgumentType.word())
                                                         .suggests(UUIDSuggestions.INSTANCE)
+                                                        .requires(source -> source.hasPermission(2))
                                                         .executes(context -> {
                                                             String uuid = StringArgumentType.getString(context, "uuid");
                                                             if (context.getSource().getEntity() instanceof ServerPlayer player) {
-                                                                ItemStack item = new ItemStack(BBItems.STORAGE_BAG.get());
-                                                                item.set(BBDataComponents.BAG_ID.get(), new BagIdComponent(UUID.fromString(uuid)));
-                                                                boolean isGiven;
-                                                                if (!player.addItem(item)) {
-                                                                    isGiven = false;
-                                                                    ItemEntity itemEntity = new ItemEntity(player.level(), player.getX(), player.getY(), player.getZ(), item);
-                                                                    itemEntity.setNoPickUpDelay();
-                                                                    itemEntity.setInvulnerable(true);
-                                                                } else {
-                                                                    isGiven = true;
+                                                                try {
+                                                                    ItemStack item = new ItemStack(BBItems.STORAGE_BAG.get());
+                                                                    item.set(BBDataComponents.BAG_ID.get(), new BagIdComponent(UUID.fromString(uuid)));
+                                                                    boolean isGiven;
+                                                                    if (!player.addItem(item)) {
+                                                                        isGiven = false;
+                                                                        ItemEntity itemEntity = new ItemEntity(player.level(), player.getX(), player.getY(), player.getZ(), item);
+                                                                        itemEntity.setNoPickUpDelay();
+                                                                        itemEntity.setNoGravity(true);
+                                                                        itemEntity.setInvulnerable(true);
+                                                                    } else {
+                                                                        isGiven = true;
+                                                                    }
+                                                                    context.getSource().sendSuccess(() -> Component.literal("success " + (isGiven ? "gave " : "summoned ") + "new " + "Storage Bag"), true);
+                                                                    return 0;
+                                                                } catch (IllegalArgumentException e) {
+                                                                    context.getSource().sendFailure(Component.literal("Argument has wrong: " + e.getMessage()));
+                                                                    return 1;
                                                                 }
-                                                                context.getSource().sendSuccess(() -> Component.literal("success " + (isGiven ? "gave " : "summoned ") + "new " + "Storage Bag"), true);
-                                                                return 0;
                                                             } else {
                                                                 context.getSource().sendFailure(Component.literal("this command must be called by player."));
                                                                 return -1;
