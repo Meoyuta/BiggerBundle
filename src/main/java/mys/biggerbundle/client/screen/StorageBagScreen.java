@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class StorageBagScreen extends AbstractContainerScreen<StorageBagMenu> {
     private static final ResourceLocation TEXTURE =
-            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/container/generic_54.png");
+            ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
 
     public StorageBagScreen(StorageBagMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);

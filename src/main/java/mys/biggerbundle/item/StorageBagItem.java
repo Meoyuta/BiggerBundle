@@ -6,6 +6,7 @@ import mys.biggerbundle.menu.StorageBagMenu;
 import mys.biggerbundle.registry.BBDataComponents;
 import mys.biggerbundle.storage.StorageBagContainer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +21,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -87,6 +89,20 @@ public class StorageBagItem extends Item {
         return expected.equals(actual);
     }
 
+    public static void markLinked(ItemStack stack) {
+        stack.update(DataComponents.CUSTOM_DATA, CustomData.EMPTY, data -> {
+            var tag = data.copyTag();
+            tag.putBoolean("linked", true);
+            return CustomData.of(tag);
+        });
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean isLinked(ItemStack stack) {
+        CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        return data.contains("linked") && data.copyTag().getBoolean("linked");
+    }
+
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
@@ -112,7 +128,22 @@ public class StorageBagItem extends Item {
     }
 
     @Override
+    public @NotNull Component getName(@NotNull ItemStack stack) {
+        if (!isLinked(stack)) return super.getName(stack);
+        else return Component.translatable("item.biggerbundle.storage_bag.linked").withStyle(ChatFormatting.GOLD);
+    }
+
+    @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltip, @NotNull TooltipFlag flag) {
         tooltip.add(Component.translatable("tooltip.biggerbundle.storage_bag.open").withStyle(ChatFormatting.GRAY));
+        if (!isLinked(stack)) return;
+        var uuid = getBagId(stack);
+        Component uuidText;
+        if (uuid == null) {
+            uuidText = Component.literal("unknown");
+        } else {
+            uuidText = Component.literal(uuid.toString());
+        }
+        tooltip.add(Component.translatable("tooltip.biggerbundle.storage_bag.linked").withStyle(ChatFormatting.DARK_PURPLE).append(uuidText));
     }
 }

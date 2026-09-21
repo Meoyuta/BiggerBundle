@@ -1,6 +1,8 @@
 {
   "item.biggerbundle.storage_bag": "Storage Bag",
+  "item.biggerbundle.storage_bag.linked": "Linked Storage Bag",
   "block.biggerbundle.wool_block": "Wool Block",
   "tooltip.biggerbundle.storage_bag.open": "Right-click in inventory or in hand to open",
-  "tooltip.biggerbundle.storage_bag.already_open": "This storage bag is already open by another player"
+  "tooltip.biggerbundle.storage_bag.already_open": "This storage bag is already open by another player",
+  "tooltip.biggerbundle.storage_bag.linked": "linked magic number："
 }

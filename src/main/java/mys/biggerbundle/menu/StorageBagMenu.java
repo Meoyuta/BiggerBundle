@@ -76,7 +76,7 @@ public final class StorageBagMenu extends AbstractContainerMenu {
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
         ItemStack quickMoved;
-        Slot source = this.slots.get(index);
+        var source = this.slots.get(index);
 
         if (!source.hasItem()) {
             return ItemStack.EMPTY;
@@ -103,6 +103,7 @@ public final class StorageBagMenu extends AbstractContainerMenu {
         }
 
         source.onTake(player, raw);
+        player.getInventory().setChanged();
         return quickMoved;
     }
 

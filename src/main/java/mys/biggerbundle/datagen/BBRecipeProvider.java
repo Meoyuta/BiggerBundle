@@ -1,5 +1,7 @@
 package mys.biggerbundle.datagen;
 
+import mys.biggerbundle.Biggerbundle;
+import mys.biggerbundle.recipe.StorageBagCloneRecipe;
 import mys.biggerbundle.registry.BBItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -8,6 +10,8 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SpecialRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -25,6 +29,7 @@ public class BBRecipeProvider extends RecipeProvider implements IConditionBuilde
     protected void buildRecipes(@NotNull RecipeOutput output) {
         generateShapedRecipes(output);
         generateShapelessRecipes(output);
+        generateSpecialRecipes(output);
     }
 
     private void generateShapedRecipes(RecipeOutput output) {
@@ -52,5 +57,11 @@ public class BBRecipeProvider extends RecipeProvider implements IConditionBuilde
                 .requires(Ingredient.of(BBItems.WOOL_BLOCK_ITEM.get()), 1)
                 .unlockedBy("has_wool", has(BBItems.WOOL_BLOCK_ITEM.get()))
                 .save(output, "shapeless_crafting_wool");
+    }
+
+    private void generateSpecialRecipes(RecipeOutput output) {
+        SpecialRecipeBuilder
+                .special(StorageBagCloneRecipe::new)
+                .save(output, ResourceLocation.fromNamespaceAndPath(Biggerbundle.MODID, "storage_bag_clone"));
     }
 }
